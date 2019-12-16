@@ -1,17 +1,20 @@
+#!/usr/bin/env node
+
 // Example: node index.js ./xxx.srt
 const fs = require('fs')
 const path = require('path')
 
 class Srt23D {
-    constructor(filePath) {
-        this.init(filePath)
+    // type = 'lr' 左右3D / type = 'td' 上下3D
+    constructor(filePath, type = 'lr') {
+        this.init(filePath, type)
     }
 
     // 初始化
-    init(filePath) {
+    init(filePath, type) {
         if (path.extname(filePath) !== '.srt') { return }
         const srtArray = this.getSrt(filePath)
-        const newSrtContent = this.mergeSrt(srtArray)
+        const newSrtContent = this.mergeSrt(srtArray, type)
         const newSrtPath = this.setSrt(filePath, newSrtContent)
 
         return
@@ -51,26 +54,30 @@ class Srt23D {
     formatSrt(index, time, text, offset) {
         const textSplit = text.split(/\n/)
         const textOffset = `${offset}${textSplit[0]}${textSplit[1] ? '\n' + offset + textSplit[1] : ''}`
+
         return `${index}\r\n${time}\r\n${textOffset}\r\n\r\n`
     }
 
-    // 合并左右屏内容
-    mergeSrt(data) {
-        let left = ''
-        let right = ''
+    // 合并两屏内容
+    mergeSrt(data, type) {
+        let partA = ''
+        let partB = ''
         let index = 0
+        const offsetA = type === 'lr' ? '{\\pos(96,255)\\fscx50}' : '{\\pos(192,268)\\fscy50}'
+        const offsetB = type === 'lr' ? '{\\pos(288,255)\\fscx50}' : '{\pos(192,124)\fscy50}'
+
         data.forEach(val => {
-            left += this.formatSrt(++index, val[0], val[1], '{\\pos(96,255)\\fscx50}')
+            partA += this.formatSrt(++index, val[0], val[1], offsetA)
         })
         data.forEach(val => {
-            right += this.formatSrt(++index, val[0], val[1], '{\\pos(288,255)\\fscx50}')
+            partB += this.formatSrt(++index, val[0], val[1], offsetB)
         })
 
-        return `${left}${right}`
+        return `${partA}${partB}`
     }
 }
 
 // 实例
 new Srt23D(
-    process.argv.splice(2)[0]
+    process.argv.splice(2)[0], 'lr'
 )
