@@ -13,7 +13,8 @@ class Srt23D {
 
     // 初始化
     init(srtPath, srtType, srtCallback) {
-        if (path.extname(srtPath) !== '.srt') { return }
+        if (!fs.existsSync(srtPath) ||
+            path.extname(srtPath) !== '.srt') { return }
         const srtArray = this.getSrt(srtPath)
         const newSrtContent = this.mergeSrt(srtArray, srtType)
         const newSrtPath = this.setSrt(srtPath, newSrtContent)
