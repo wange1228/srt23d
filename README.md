@@ -1,4 +1,6 @@
 # srt23d 字幕转换工具
+[![License](https://img.shields.io/badge/license-MIT-green)](https://github.com/wange1228/srt23d/blob/master/LICENSE)
+[![Release Version](https://img.shields.io/github/v/release/wange1228/srt23d.svg)](https://github.com/wange1228/srt23d/releases)
 
 ## 介绍
 srt 字幕文件 2D 转 3D，支持左右 3D 和 上下 3D 类型，工具不会修改原字幕文件，转换后的 3D 字幕文件会以 `-3D.srt` 结尾命名保存在原字幕文件目录下，该工具献给有缘人。
