@@ -53,18 +53,35 @@ class Srt23D {
     // 格式化内容
     formatSrt(index, time, text, offset) {
         const textSplit = text.split(/\n/)
-        const textOffset = `${offset}${textSplit[0]}${textSplit[1] ? '\n' + offset + textSplit[1] : ''}`
+        let texts = ''
+        textSplit.forEach(val => {
+            if (val) {
+                texts += `${offset}${val}\r\n`
+            }
+        })
 
-        return `${index}\r\n${time}\r\n${textOffset}\r\n\r\n`
+        return `${index}\r\n${time}\r\n${texts}\r\n`
     }
 
     // 合并两屏内容
     mergeSrt(data, type) {
         let partA = ''
         let partB = ''
+        let offsetA = ''
+        let offsetB = ''
         let index = 0
-        const offsetA = type === 'lr' ? '{\\pos(96,255)\\fscx50}' : '{\\pos(192,268)\\fscy50}'
-        const offsetB = type === 'lr' ? '{\\pos(288,255)\\fscx50}' : '{\pos(192,124)\fscy50}'
+
+        switch (type) {
+            case 'lr':
+                offsetA = '{\\pos(96,255)\\fscx50}'
+                offsetB = '{\\pos(288,255)\\fscx50}'
+                break
+
+            case 'td':
+                offsetA = '{\\pos(192,268)\\fscy50}'
+                offsetB = '{\\pos(192,124)\\fscy50}'
+                break
+        }
 
         data.forEach(val => {
             partA += this.formatSrt(++index, val[0], val[1], offsetA)
