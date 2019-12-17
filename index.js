@@ -3,6 +3,8 @@
 // Example: node index.js ./xxx.srt
 const fs = require('fs')
 const path = require('path')
+const iconv = require('iconv-lite')
+const jschardet = require('jschardet')
 
 class Srt23D {
     // type = 'lr' 左右3D / type = 'td' 上下3D
@@ -22,7 +24,18 @@ class Srt23D {
 
     // 获取文件内容
     getSrt(filePath) {
-        const srtData = fs.readFileSync(filePath).toString().split('\r\n').join('\n')
+        const srtBuf = fs.readFileSync(filePath)
+        // 编码检测并映射
+        let encoding = 'UTF8'
+        switch (jschardet.detect(srtBuf).encoding) {
+            case 'UTF-8':
+                encoding = 'UTF8'
+                break
+            case 'GB2312':
+                encoding = 'GB2312'
+                break
+        }
+        const srtData = iconv.decode(srtBuf, encoding).toString().split('\r\n').join('\n')
         // 按空行分割
         const srtSplit = srtData.split(/\n\n/)
         const srtArray = []
