@@ -1,15 +1,17 @@
 {
   "name": "srt23d",
   "version": "1.0.0",
-  "description": "",
+  "description": "srt 字幕文件 2D 转 3D",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "iconv-lite": "^0.5.0",
+    "inquirer": "^7.0.1",
     "jschardet": "^2.1.1"
   }
 }
